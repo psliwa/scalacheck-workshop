@@ -8,7 +8,7 @@ object Graph {
   def pathsFromNode[Node](node: Node,
                           graph: Graph[Node]): Set[GraphPath[Node]] = {
     def loop(node: Node, currentPath: GraphPath[Node], visited: Set[Node]): Set[GraphPath[Node]] = {
-      val updatedCurrentPath = currentPath :+ node // CORRECT 1
+      val updatedCurrentPath = currentPath :+ node // CORRECT
 //      val updatedCurrentPath = currentPath :+ node :+ node // BUG 1
       val toReturn = if (updatedCurrentPath.size >= 2) Set(updatedCurrentPath) else Set.empty[GraphPath[Node]]
       if (visited.contains(node)) {

@@ -6,15 +6,13 @@ import org.scalacheck.Gen
 object GraphGen {
   type Node = Int
 
-  private val allNodesGen: Gen[Set[Node]] = Gen.sized(size => Gen.const((0 to size).toSet))
+  private val allNodesGen: Gen[Set[Node]] = ???
 
-  private def someNeighborsCountGen: Gen[Int] = Gen.sized(Gen.chooseNum(0, _))
+  private def someNeighborsCountGen: Gen[Int] = ???
 
-  private def maxNeighboursCountGen: Gen[Int] = Gen.size
+  private def maxNeighboursCountGen: Gen[Int] = ???
 
-  private def neighborsGen(neighborsCountGen: Gen[Int])(node: Node, allNodes: Set[Node]): Gen[Neighbors[Node]] = {
-    neighborsCountGen.flatMap(Gen.pick(_, allNodes - node)).map(_.toSet)
-  }
+  private def neighborsGen(neighborsCountGen: Gen[Int])(node: Node, allNodes: Set[Node]): Gen[Neighbors[Node]] = ???
 
   private def graphFromNodesGen(neighborsCount: Gen[Int])(nodes: Set[Node]): Gen[Graph[Node]] = {
     import scala.collection.JavaConverters._
@@ -31,9 +29,5 @@ object GraphGen {
 
   def totalGraphAndStartingNodeGen: Gen[GraphAndStartingNode] = graphAndStartingNodeGen(maxNeighboursCountGen)
 
-  private def graphAndStartingNodeGen(neighborsCountGen: Gen[Int]): Gen[GraphAndStartingNode] = for {
-    nodes <- allNodesGen if nodes.nonEmpty
-    graph <- graphFromNodesGen(neighborsCountGen)(nodes)
-    node <- Gen.oneOf(nodes.toList)
-  } yield GraphAndStartingNode(graph, node)
+  private def graphAndStartingNodeGen(neighborsCountGen: Gen[Int]): Gen[GraphAndStartingNode] = ???
 }

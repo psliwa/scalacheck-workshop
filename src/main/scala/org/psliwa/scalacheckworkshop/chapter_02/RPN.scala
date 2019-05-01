@@ -20,12 +20,12 @@ object RPN {
 
   def parse(expr: String): Option[Expression] = {
     val tokens: List[Option[Token]] = expr.split(" ").toList.map {
-      case "+" => Some(OperationToken(Operation.+))
-      case "-" => Some(OperationToken(Operation.-))
-      case "*" => Some(OperationToken(Operation.*))
-      case "/" => Some(OperationToken(Operation./))
+//      case "+" => Some(OperationToken(Operation.+)) // CORRECT
+//      case "-" => Some(OperationToken(Operation.-)) // CORRECT
+//      case "*" => Some(OperationToken(Operation.*)) // CORRECT
+//      case "/" => Some(OperationToken(Operation./)) // CORRECT
 //      case "1" => Some(NumberToken(2)) // BUG 1
-      case n => Try { n.toInt }.map(NumberToken).toOption
+      case n => Try { n.toInt }.map(NumberToken).toOption // CORRECT & DEFAULT
     }
 
     import cats.instances.all._
@@ -41,8 +41,9 @@ object RPN {
           case OperationToken(op) =>
             val expr1 = stack(0)
             val expr2 = stack(1)
-            loop(tokens.tail, Expression.Complex(expr2, op, expr1) :: stack.drop(2))
+//            loop(tokens.tail, Expression.Complex(expr2, op, expr1) :: stack.drop(2)) // CORRECT
 //            loop(tokens.tail, Expression.Complex(expr1, op, expr2) :: stack.drop(2)) // BUG 2
+            Some(Expression.Complex(expr1, op, expr2)) // DEFAULT
           case NumberToken(number) =>
             loop(tokens.tail, Expression.Simple(number) :: stack)
         }
@@ -64,7 +65,7 @@ object RPN {
   def toString(expr: Expression): String = expr match {
     case Expression.Simple(number) => number.toString
 //    case Expression.Complex(expr1, operation, Expression.Complex(_: Expression.Simple, _, expr2)) => // BUG 3
-//      toString(expr1) + " " + toString(expr2) + " " + operation
+//      toString(expr1) + " " + toString(expr2) + " " + operation // BUG 3
     case Expression.Complex(expr1, operation, expr2) =>
       toString(expr1) + " " + toString(expr2) + " " + operation
   }

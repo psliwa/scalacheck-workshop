@@ -4,33 +4,22 @@ import org.psliwa.scalacheckworkshop.chapter_02.RPN.{Expression, Operation}
 import org.scalatest.prop.{PropertyChecks, Whenever}
 import org.scalatest.{FunSuite, Matchers, OptionValues}
 import RPNGen._
+import RPNShrink.expressionShrink
 
-// topic: mixing traditional example based tests with property based
 class RPNSpec extends FunSuite with PropertyChecks with Matchers with Whenever with OptionValues {
 
   test("parse single number") {
     RPN.parse("20").value should be(Expression.Simple(20))
   }
 
-  test("parse all single numbers") {
-    forAll { number: Int =>
-      val string = number.toString
-
-      RPN.parse(string).value should be(Expression.Simple(number))
-    }
+  ignore("parse all single numbers") {
   }
 
   test("parse expression with one operation") {
     RPN.parse("1 2 +").value should be(Expression.Complex(Expression.Simple(1), Operation.+, Expression.Simple(2)))
   }
 
-  // topic: simple custom generator
-  test("parse all expressions with one operation") {
-    forAll { (number1: Int, operation: Operation, number2: Int) =>
-      val string = s"$number1 $number2 $operation"
-
-      RPN.parse(string).value should be(Expression.Complex(Expression.Simple(number1), operation, Expression.Simple(number2)))
-    }
+  ignore("parse all expressions with one operation") {
   }
 
   test("parse expression with two operations") {
@@ -43,20 +32,10 @@ class RPNSpec extends FunSuite with PropertyChecks with Matchers with Whenever w
     )
   }
 
-  test("parse all expression with two operations") {
-    forAll { (number1: Int, number2: Int, operation1: Operation, number3: Int, operation2: Operation) =>
-      RPN.parse(s"$number1 $number2 $operation1 $number3 $operation2").value should be(
-        Expression.Complex(
-          Expression.Complex(Expression.Simple(number1), operation1, Expression.Simple(number2)),
-          operation2,
-          Expression.Simple(number3)
-        )
-      )
-    }
+  ignore("parse all expression with two operations") {
   }
 
   test("parse very complex expression") {
-    // ((2+7)/3+(14-3)*4)/2
 //    (2 + 7) / 3 + (14 - 3) * 4 / 2
     RPN.parse("2 7 + 3 / 14 3 - 4 * 2 / +").value should be(
       Expression.Complex(
@@ -91,15 +70,7 @@ class RPNSpec extends FunSuite with PropertyChecks with Matchers with Whenever w
     RPN.parse("2 7 + 3 / 14 3 - 4 * 2 / +").map(RPN.toString).value should be("2 7 + 3 / 14 3 - 4 * 2 / +")
   }
 
-  // topic: complex custom generator
-  // topic: shrink
-  test("all toString results are the same as parse input") {
-    import RPNShrink.expressionShrink
-    forAll(SizeRange(10)) { expression: Expression =>
-      val parsedAgain = RPN.parse(RPN.toString(expression)).value
-      RPN.toString(expression) shouldBe RPN.toString(parsedAgain)
-      parsedAgain shouldBe expression
-    }
+  ignore("all toString results are the same as parse input") {
   }
 
 }
